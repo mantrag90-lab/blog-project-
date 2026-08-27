@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, RTE, Select } from "..";
 import appwriteService from "../../appwrite/config";
@@ -17,35 +17,65 @@ export default function PostForm({ post }) {
 
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
+    const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     const submit = async (data) => {
-        if (post) {
-            const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
+        setError("");
+        setSubmitting(true);
+        try {
+            if (post) {
+                const file = data.image?.[0] ? await appwriteService.uploadFile(data.image[0]) : null;
 
-            if (file) {
-                appwriteService.deleteFile(post.featuredImage);
-            }
+                if (file) {
+                    appwriteService.deleteFile(post.featuredImage);
+                }
 
-            const dbPost = await appwriteService.updatePost(post.$id, {
-                ...data,
-                featuredImage: file ? file.$id : undefined,
-            });
-
-            if (dbPost) {
-                navigate(`/post/${dbPost.$id}`);
-            }
-        } else {
-            const file = await appwriteService.uploadFile(data.image[0]);
-
-            if (file) {
-                const fileId = file.$id;
-                data.featuredImage = fileId;
-                const dbPost = await appwriteService.createPost({ ...data, userId: userData.$id });
+                const dbPost = await appwriteService.updatePost(post.$id, {
+                    ...data,
+                    featuredImage: file ? file.$id : post.featuredImage,
+                });
 
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`);
+                } else {
+                    setError("Failed to update post. Please try again.");
+                }
+            } else {
+                if (!data.image?.[0]) {
+                    setError("Please select a featured image.");
+                    setSubmitting(false);
+                    return;
+                }
+
+                const file = await appwriteService.uploadFile(data.image[0]);
+
+                if (file) {
+                    const fileId = file.$id;
+                    data.featuredImage = fileId;
+                    const dbPost = await appwriteService.createPost({
+                        title: data.title,
+                        slug: data.slug,
+                        content: data.content,
+                        featuredImage: data.featuredImage,
+                        status: data.status,
+                        userId: userData.$id,
+                    });
+
+                    if (dbPost) {
+                        navigate(`/post/${dbPost.$id}`);
+                    } else {
+                        setError("Failed to create post. Please try again.");
+                    }
+                } else {
+                    setError("Failed to upload image. Please try again.");
                 }
             }
+        } catch (err) {
+            console.error("PostForm :: submit :: error", err);
+            setError(err?.message || "Something went wrong. Please try again.");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -55,7 +85,8 @@ export default function PostForm({ post }) {
                 .trim()
                 .toLowerCase()
                 .replace(/[^a-zA-Z\d\s]+/g, "-")
-                .replace(/\s/g, "-");
+                .replace(/\s/g, "-")
+                .substring(0, 36);
 
         return "";
     }, []);
@@ -71,7 +102,12 @@ export default function PostForm({ post }) {
     }, [watch, slugTransform, setValue]);
 
     return (
-        <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
+        <form onSubmit={handleSubmit(submit, () => setError("Please fill in all required fields."))} className="flex flex-wrap">
+            {error && (
+                <div className="w-full px-2 mb-4">
+                    <p className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3 text-center">{error}</p>
+                </div>
+            )}
             <div className="w-2/3 px-2">
                 <Input
                     label="Title :"
@@ -113,8 +149,8 @@ export default function PostForm({ post }) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
+                <Button type="submit" bgColor={post ? "bg-green-500" : "bg-purple-600"} className="w-full" disabled={submitting}>
+                    {submitting ? "Submitting..." : (post ? "Update" : "Submit")}
                 </Button>
             </div>
         </form>

@@ -4,13 +4,18 @@ import Container from "./Container/Container";
 import Logo from "./Logo";
 import LogoutBtn from "./Header/LogoutBtn";
 import RTE from "./RTE"
-import Signup from "../pages/Signup";
-import Login from "../Pages/Login";
-import Post from "./Post"
+import Signup from "./Signup";
+import Login from "./Login";
+import Select from "./Select"
 import PostForm from "./post-form/PostForm"
 import PostCard from "./PostCard";
+import Button from "./Button";
+import AuthLayout from "./AuthLayout";
+import Input from "./input";
+
 
 export{
+    Select,
     Header,
     Footer,
     Container,
@@ -19,7 +24,9 @@ export{
     RTE,
     Signup,
     Login,
-    Post,
+    Input,
+    Button,
+    AuthLayout,
     PostForm,
     PostCard
 }

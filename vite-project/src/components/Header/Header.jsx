@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status)
+  const userEmail = useSelector((state) => state.auth.userData?.email)
   const links = [
     { name: 'Stories', to: '/', show: true },
     { name: 'My posts', to: '/all-posts', show: authStatus },
@@ -22,6 +23,7 @@ function Header() {
             <span className="font-serif text-xl font-bold tracking-tight text-stone-900">fieldnotes</span>
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">
+            {authStatus && userEmail && <span className="hidden max-w-40 truncate border-r border-stone-200 pr-3 text-xs text-stone-500 lg:inline" title={userEmail}>{userEmail}</span>}
             {links.filter((item) => item.show).map(({ name, to, primary }) => (
               <NavLink
                 key={name}

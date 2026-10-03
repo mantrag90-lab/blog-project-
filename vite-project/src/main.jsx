@@ -8,13 +8,13 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { AuthLayout } from './components/index.js'
 
 // Lazy load page components for code splitting
-const Home = lazy(() => import('./pages/Home.jsx'))
-const Login = lazy(() => import('./pages/Login.jsx'))
-const Signup = lazy(() => import('./pages/Signup.jsx'))
-const AddPost = lazy(() => import('./pages/AddPost.jsx'))
-const EditPost = lazy(() => import('./pages/EditPost.jsx'))
-const Post = lazy(() => import('./pages/Post.jsx'))
-const AllPosts = lazy(() => import('./pages/AllPost.jsx'))
+const Home = lazy(() => import('./Pages/Home.jsx'))
+const Login = lazy(() => import('./Pages/Login.jsx'))
+const Signup = lazy(() => import('./Pages/Signup.jsx'))
+const AddPost = lazy(() => import('./Pages/AddPost.jsx'))
+const EditPost = lazy(() => import('./Pages/EditPost.jsx'))
+const Post = lazy(() => import('./Pages/Post.jsx'))
+const AllPosts = lazy(() => import('./Pages/AllPost.jsx'))
 
 // Loading fallback component
 const PageLoader = () => (

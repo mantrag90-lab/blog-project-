@@ -16,6 +16,7 @@ const EditPost = lazy(() => import('./Pages/EditPost.jsx'))
 const Post = lazy(() => import('./Pages/Post.jsx'))
 const AllPosts = lazy(() => import('./Pages/AllPost.jsx'))
 
+
 // Loading fallback component
 const PageLoader = () => (
   <div className='flex items-center justify-center py-16'>

@@ -28,25 +28,23 @@ function Login() {
 
   return (
     <div
-    className='flex items-center justify-center w-full'
+        className='mx-auto flex w-full max-w-6xl items-center justify-center px-5 py-8 sm:px-8 sm:py-14'
     >
-        <div className={`mx-auto w-full max-w-lg bg-purple-50 rounded-xl p-10 border border-purple-200`}>
+        <div className="w-full max-w-md rounded-3xl border border-stone-200 bg-white p-7 shadow-[0_20px_60px_-44px_rgba(41,45,36,.3)] sm:p-10">
         <div className="mb-2 flex justify-center">
-                    <span className="inline-block w-full max-w-[100px]">
-                        <Logo width="100%" />
-                    </span>
+                    <span className="grid h-12 w-12 place-items-center rounded-full bg-[#416b4d] font-serif text-2xl font-bold text-white">f.</span>
         </div>
-        <h2 className="text-center text-2xl font-bold leading-tight text-purple-900">Sign in to your account</h2>
-        <p className="mt-2 text-center text-base text-purple-700/60">
+        <h2 className="text-center font-serif text-3xl font-medium leading-tight text-stone-900">Welcome back</h2>
+        <p className="mt-2 text-center text-sm text-stone-500">
                     Don&apos;t have any account?&nbsp;
                     <Link
                         to="/signup"
-                        className="font-medium text-purple-600 transition-all duration-200 hover:underline"
+                        className="font-semibold text-[#416b4d] transition-colors hover:text-[#34563e]"
                     >
                         Sign Up
                     </Link>
         </p>
-        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+        {error && <p className="mt-6 rounded-xl border border-rose-200 bg-rose-50 p-3 text-center text-sm text-rose-700">{error}</p>}
         <form onSubmit={handleSubmit(login, () => setError("Enter a valid email address and password."))} className='mt-8'>
             <div className='space-y-5'>
                 <Input

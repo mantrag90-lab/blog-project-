@@ -28,12 +28,12 @@ export default function PostForm({ post }) {
                 const file = data.image?.[0] ? await appwriteService.uploadFile(data.image[0]) : null;
 
                 if (file) {
-                    appwriteService.deleteFile(post.featuredImage);
+                    appwriteService.deleteFile(post.featuredImages);
                 }
 
                 const dbPost = await appwriteService.updatePost(post.$id, {
                     ...data,
-                    featuredImage: file ? file.$id : post.featuredImage,
+                    featuredImages: file ? file.$id : post.featuredImages,
                 });
 
                 if (dbPost) {
@@ -42,6 +42,12 @@ export default function PostForm({ post }) {
                     setError("Failed to update post. Please try again.");
                 }
             } else {
+                const currentUserId = userData?.$id;
+                if (!currentUserId) {
+                    setError("Your session has expired. Please sign in again before submitting.");
+                    return;
+                }
+
                 if (!data.image?.[0]) {
                     setError("Please select a featured image.");
                     setSubmitting(false);
@@ -52,14 +58,13 @@ export default function PostForm({ post }) {
 
                 if (file) {
                     const fileId = file.$id;
-                    data.featuredImage = fileId;
                     const dbPost = await appwriteService.createPost({
                         title: data.title,
                         slug: data.slug,
                         content: data.content,
-                        featuredImage: data.featuredImage,
+                        featuredImages: fileId,
                         status: data.status,
-                        userId: userData.$id,
+                        userid: currentUserId,
                     });
 
                     if (dbPost) {
@@ -102,23 +107,24 @@ export default function PostForm({ post }) {
     }, [watch, slugTransform, setValue]);
 
     return (
-        <form onSubmit={handleSubmit(submit, () => setError("Please fill in all required fields."))} className="flex flex-wrap">
+        <form onSubmit={handleSubmit(submit, () => setError("Please fill in all required fields."))} className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
             {error && (
-                <div className="w-full px-2 mb-4">
-                    <p className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-3 text-center">{error}</p>
+                <div className="lg:col-span-2">
+                    <p className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</p>
                 </div>
             )}
-            <div className="w-2/3 px-2">
+            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:p-7">
+                <div className="mb-6 border-b border-stone-100 pb-5"><p className="text-xs font-semibold uppercase tracking-[.16em] text-[#416b4d]">Your draft</p><h2 className="mt-2 font-serif text-2xl text-stone-900">Shape your story</h2><p className="mt-1 text-sm text-stone-500">A clear title and a little care go a long way.</p></div>
                 <Input
-                    label="Title :"
-                    placeholder="Title"
-                    className="mb-4"
+                    label="Story title"
+                    placeholder="Give your story a thoughtful title"
+                    className="mb-5"
                     {...register("title", { required: true })}
                 />
                 <Input
-                    label="Slug :"
-                    placeholder="Slug"
-                    className="mb-4"
+                    label="Story address"
+                    placeholder="your-story-title"
+                    className="mb-5"
                     {...register("slug", { required: true })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
@@ -126,20 +132,21 @@ export default function PostForm({ post }) {
                 />
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
             </div>
-            <div className="w-1/3 px-2">
+            <aside className="h-fit rounded-2xl border border-stone-200 bg-white p-5 sm:p-6">
+                <p className="mb-5 text-xs font-semibold uppercase tracking-[.16em] text-[#416b4d]">Publishing</p>
                 <Input
-                    label="Featured Image :"
+                    label="Cover image"
                     type="file"
-                    className="mb-4"
+                    className="mb-5 file:mr-3 file:rounded-full file:border-0 file:bg-[#e6ece3] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#416b4d]"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post })}
                 />
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            src={appwriteService.getFilePreview(post.featuredImages)}
                             alt={post.title}
-                            className="rounded-lg"
+                            className="mb-5 aspect-video w-full rounded-xl object-cover"
                         />
                     </div>
                 )}
@@ -149,10 +156,11 @@ export default function PostForm({ post }) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button type="submit" bgColor={post ? "bg-green-500" : "bg-purple-600"} className="w-full" disabled={submitting}>
-                    {submitting ? "Submitting..." : (post ? "Update" : "Submit")}
+                <Button type="submit" className="w-full" disabled={submitting}>
+                    {submitting ? "Saving…" : (post ? "Save changes" : "Publish story")}
                 </Button>
-            </div>
+                <p className="mt-3 text-center text-xs leading-5 text-stone-400">Take a final look through your story before sharing it.</p>
+            </aside>
         </form>
     );
 }

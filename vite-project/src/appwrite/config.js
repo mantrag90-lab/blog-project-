@@ -1,5 +1,5 @@
 import conf from '../conf/conf.js';
-import { Client, ID, Databases, Storage, Query } from "appwrite";
+import { Client, ID, Databases, Storage, Query, Permission, Role } from "appwrite";
 
 export class Service {
     client = new Client();
@@ -14,7 +14,7 @@ export class Service {
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId}) {
+    async createPost({title, slug, content, featuredImages, status, userid}) {
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -23,9 +23,9 @@ export class Service {
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredImages,
                     status,
-                    userId,
+                    userid: userid?.trim(),
                 }
             )
         } catch (error) {
@@ -34,7 +34,7 @@ export class Service {
         }
     }
 
-    async updatePost(slug, {title, content, featuredImage, status}) {
+    async updatePost(slug, {title, content, featuredImages, status}) {
         try {
             return await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -43,7 +43,7 @@ export class Service {
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredImages,
                     status,
                 }
             )
@@ -93,6 +93,11 @@ export class Service {
         }
     }
 
+    async getPostsByUser(userId) {
+        if (!userId) return false;
+        return this.getPosts([Query.equal("userid", userId)]);
+    }
+
     // file upload service
 
     async uploadFile(file) {
@@ -100,7 +105,8 @@ export class Service {
             return await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
-                file
+                file,
+                [Permission.read(Role.any())]
             )
         } catch (error) {
             console.log("Appwrite service :: uploadFile :: error", error);
@@ -122,10 +128,18 @@ export class Service {
     }
 
     getFilePreview(fileId) {
-        return this.bucket.getFilePreview(
+        if (!fileId) return null;
+
+        // Some existing documents may store a complete image URL instead of a
+        // Storage file ID. Keep those records renderable during migration.
+        if (/^https?:\/\//i.test(fileId)) return fileId;
+
+        // The view endpoint serves the uploaded original without requiring
+        // preview transformations to be enabled for this bucket.
+        return this.bucket.getFileView(
             conf.appwriteBucketId,
             fileId
-        )
+        ).toString()
     }
 }
 

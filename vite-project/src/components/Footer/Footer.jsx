@@ -1,142 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Logo from '../Logo'
+import { Container } from '../index'
 
 function Footer() {
   return (
-    <section className="relative overflow-hidden py-10 bg-purple-800 border border-t-2 border-t-purple-900">
-            <div className="relative z-10 mx-auto max-w-7xl px-4">
-                <div className="-m-6 flex flex-wrap">
-                    <div className="w-full p-6 md:w-1/2 lg:w-5/12">
-                        <div className="flex h-full flex-col justify-between">
-                            <div className="mb-4 inline-flex items-center">
-                                <Logo width="100px" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-purple-300">
-                                    &copy; Copyright 2023. All Rights Reserved by DevUI.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="w-full p-6 md:w-1/2 lg:w-2/12">
-                        <div className="h-full">
-                            <h3 className="tracking-px mb-9 text-xs font-semibold uppercase text-purple-400">
-                                Company
-                            </h3>
-                            <ul>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Features
-                                    </Link>
-                                </li>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Pricing
-                                    </Link>
-                                </li>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Affiliate Program
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Press Kit
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="w-full p-6 md:w-1/2 lg:w-2/12">
-                        <div className="h-full">
-                            <h3 className="tracking-px mb-9 text-xs font-semibold uppercase text-purple-400">
-                                Support
-                            </h3>
-                            <ul>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Account
-                                    </Link>
-                                </li>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Help
-                                    </Link>
-                                </li>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Contact Us
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Customer Support
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="w-full p-6 md:w-1/2 lg:w-3/12">
-                        <div className="h-full">
-                            <h3 className="tracking-px mb-9 text-xs font-semibold uppercase text-purple-400">
-                                Legals
-                            </h3>
-                            <ul>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Terms &amp; Conditions
-                                    </Link>
-                                </li>
-                                <li className="mb-4">
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Privacy Policy
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="text-base font-medium text-purple-200 hover:text-white"
-                                        to="/"
-                                    >
-                                        Licensing
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <footer className="mt-20 border-t border-stone-200 bg-[#f2f0e9]">
+      <Container>
+        <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <Link to="/" className="font-serif text-lg font-bold tracking-tight text-stone-900">fieldnotes<span className="text-[#416b4d]">.</span></Link>
+            <p className="mt-1 text-sm text-stone-500">A little space for ideas worth sharing.</p>
+          </div>
+          <div className="flex items-center gap-5 text-sm text-stone-500">
+            <Link className="transition-colors hover:text-stone-900" to="/">Read stories</Link>
+            <Link className="transition-colors hover:text-stone-900" to="/add-post">Write a post</Link>
+            <span>© {new Date().getFullYear()} Fieldnotes</span>
+          </div>
+        </div>
+      </Container>
+    </footer>
   )
 }
 

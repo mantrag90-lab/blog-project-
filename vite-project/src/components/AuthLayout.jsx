@@ -19,7 +19,7 @@ export default function Protected({children, authentication = true}) {
 
   return loader ? (
     <div className='flex items-center justify-center py-12'>
-      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600'></div>
+      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#416b4d]'></div>
     </div>
   ) : <>{children}</>
 }

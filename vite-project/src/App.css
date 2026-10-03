@@ -1,1 +1,3 @@
-/* App-level styles */
+html { scroll-behavior: smooth; }
+
+:focus-visible { outline: 3px solid #8da68e; outline-offset: 3px; }

@@ -3,13 +3,13 @@ import React from 'react'
 function Button({
   children,
   type = 'button',
-  bgColor = 'bg-purple-600',
+  bgColor = 'bg-[#416b4d]',
   textColor = 'text-white',
   className = '',
   ...props
 }) {
   return (
-    <button type={type} className={`px-4 py-2 rounded-lg ${bgColor} ${textColor} ${className} hover:opacity-90 transition-opacity duration-200`} {...props}>
+    <button type={type} className={`rounded-full px-5 py-2.5 text-sm font-semibold ${bgColor} ${textColor} ${className} transition duration-200 hover:-translate-y-0.5 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0`} {...props}>
       {children}
     </button>
   )
